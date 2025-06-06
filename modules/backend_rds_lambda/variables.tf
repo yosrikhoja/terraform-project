@@ -3,7 +3,8 @@ variable "subnet_ids" {
 }
 
 variable "vpc_id" {
-  type = string
+    type        = string
+    description = "The ID of the VPC where resources will be deployed"
 }
 
 variable "rds_username" {
@@ -21,4 +22,8 @@ variable "rds_instance_class" {
 
 variable "s3_bucket_name" {
   description = "Bucket to store files exported by Lambda"
+}
+variable "private_subnet_ids" {
+    type        = list(string)
+    description = "List of private subnet IDs for RDS and Lambda"
 }

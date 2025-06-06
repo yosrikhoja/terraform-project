@@ -13,3 +13,6 @@ output "private_subnet_ids" {
 output "load_balancer_dns" {
   value = aws_lb.app_lb.dns_name
 }
+output "lb_dns_name" {
+  value = aws_lb.app.dns_name
+}

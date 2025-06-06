@@ -2,12 +2,9 @@ variable "public_subnet_ids" {}
 
 resource "aws_s3_bucket" "app" {
   bucket = "auto-guard-app-${random_id.bucket_suffix.hex}"
-  acl    = "private"
-
-  website {
-    index_document = "index.html"
-    error_document = "error.html"
-  }
+  # acl    = "private"
+  # The "acl" argument is deprecated and has been
+  # The "website" block is deprecated and has been removed.
 }
 
 resource "random_id" "bucket_suffix" {

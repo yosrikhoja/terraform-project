@@ -1,6 +1,7 @@
 variable "vpc_id" {}
 variable "public_subnet_ids" {}
 variable "private_subnet_ids" {}
+variable "db_endpoint" {}
 
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -128,6 +129,13 @@ resource "aws_autoscaling_attachment" "asg_attachment" {
   lb_target_group_arn    = aws_lb_target_group.app.arn
 }
 
-output "lb_dns_name" {
-  value = aws_lb.app.dns_name
+
+# In backend/main.tf
+resource "aws_autoscaling_schedule" "scale_down" {
+  scheduled_action_name  = "scale_down_nights"
+  min_size               = 0
+  max_size               = 0
+  desired_capacity       = 0
+  recurrence             = "0 18 * * *" # 6PM UTC
+  autoscaling_group_name = aws_autoscaling_group.app.name
 }

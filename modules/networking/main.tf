@@ -1,3 +1,7 @@
+
+data "aws_region" "current" {}
+
+
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string
@@ -99,14 +103,4 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.private.id
 }
 
-output "vpc_id" {
-  value = aws_vpc.main.id
-}
 
-output "public_subnet_ids" {
-  value = aws_subnet.public[*].id
-}
-
-output "private_subnet_ids" {
-  value = aws_subnet.private[*].id
-}

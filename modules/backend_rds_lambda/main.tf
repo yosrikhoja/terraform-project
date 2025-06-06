@@ -1,7 +1,3 @@
-variable "vpc_id" {}
-variable "private_subnet_ids" {}
-variable "db_username" {}
-variable "db_password" {}
 
 resource "aws_security_group" "db" {
   name        = "auto-guard-db-sg"
@@ -29,8 +25,8 @@ resource "aws_db_instance" "default" {
   engine_version         = "5.7"
   instance_class         = "db.t3.micro" # Free tier eligible
   db_name                = "autoguard"
-  username               = var.db_username
-  password               = var.db_password
+  username               = var.rds_username
+  password               = var.rds_password
   parameter_group_name   = "default.mysql5.7"
   skip_final_snapshot    = true
   vpc_security_group_ids = [aws_security_group.db.id]
@@ -92,17 +88,28 @@ resource "aws_lambda_function" "db_reader" {
   environment {
     variables = {
       DB_HOST     = aws_db_instance.default.address
-      DB_USER     = var.db_username
-      DB_PASSWORD = var.db_password
+      DB_USER     = var.rds_username
+      DB_PASSWORD = var.rds_password
       DB_NAME     = "autoguard"
     }
   }
 }
 
-output "lambda_arn" {
-  value = aws_lambda_function.db_reader.arn
-}
 
-output "db_endpoint" {
-  value = aws_db_instance.default.endpoint
+# In backend_rds_lambda/main.tf
+# In backend_rds_lambda/main.tf
+resource "aws_iam_role_policy" "lambda_rds_access" {
+  name = "lambda-rds-access"
+  role = aws_iam_role.lambda_exec.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Action = [
+        "rds-db:connect"
+      ],
+      Effect   = "Allow",
+      Resource = aws_db_instance.default.arn
+    }]
+  })
 }
