@@ -1,7 +1,9 @@
-    terraform {
-    backend "s3" {
-        bucket = "terraform-state-bucket-01"
-        key    = "terraform-state-bucket-01.terraform.tfstate"
-        region = "us-east-1" 
-    }
-    }
+terraform {
+  backend "s3" {
+    bucket         = "auto-guard-tf-state"
+    key            = "terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "auto-guard-tf-lock"
+  }
+}

@@ -1,11 +1,17 @@
-# variables.tf
-variable "cidr_block" {
-  description = "CIDR block for the VPC"
+variable "db_username" {
+  description = "Database administrator username"
   type        = string
-  default     = "10.0.0.0/16"
+  sensitive   = true
 }
 
-variable "hosted_zone_id" {
-  description = "Hosted zone ID for Route 53"
+variable "db_password" {
+  description = "Database administrator password"
   type        = string
+  sensitive   = true
+}
+
+variable "region" {
+  description = "AWS region"
+  type        = string
+  default     = "us-east-1"
 }
